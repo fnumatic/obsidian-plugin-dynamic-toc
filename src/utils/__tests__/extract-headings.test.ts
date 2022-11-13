@@ -2,6 +2,8 @@ import { CachedMetadata } from "obsidian";
 import { TableOptions } from "src/types";
 import { extractHeadings } from "../extract-headings";
 
+jest.mock('obsidian');
+
 describe("Extract headings", () => {
   describe("build markdown text", () => {
     const defaultHeadings = {
