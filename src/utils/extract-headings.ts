@@ -43,15 +43,21 @@ export function embeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache
 }
 
 export function mergeHeadings(headings:HeadingCache[], embeddedHeadings:EmbeddedHeadings) {
+  console.log(mergeHeadings.name, embeddedHeadings);
+  
   const insertHeadings = (h: HeadingCache): HeadingCache []=> {
     const offset = h.level;
     const eheadings = embeddedHeadings[h.heading]
-                      ?.filter((h:HeadingCache) => h.level > 0)
+                      ?.filter((h:HeadingCache) => h.level > 1)
                       .map(tweakOffset(offset));
+                      console.log(eheadings);
+                      
     return (eheadings) ? [h, ...eheadings] : [h];
   };
   
   const patchedHeadings = headings.flatMap(insertHeadings);
+  console.log(mergeHeadings.name, patchedHeadings);
+
   return {headings:patchedHeadings} as CachedMetadata;
 }
 
