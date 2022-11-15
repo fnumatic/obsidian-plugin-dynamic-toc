@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Extract embedded headings build markdown text should match snapshot 1`] = `
+"- [[#foo]]
+- [[#bar emb]]
+	- [[#bar emb L2]]
+		- [[#bar emb L3]]"
+`;
+
 exports[`Extract headings build markdown text should match snapshot 1`] = `
 "1. [[#foo]]
 	1. [[#bar]]

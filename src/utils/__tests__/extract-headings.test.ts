@@ -1,6 +1,6 @@
-import { CachedMetadata } from "obsidian";
+import { CachedMetadata,HeadingCache } from "obsidian";
 import { TableOptions } from "src/types";
-import { extractHeadings } from "../extract-headings";
+import { extractHeadings, mergeHeadings, EmbeddedHeadings } from "../extract-headings";
 
 jest.mock('obsidian');
 
@@ -164,3 +164,38 @@ describe("Extract headings", () => {
     });
   });
 });
+
+describe("Extract embedded headings", () => {
+  describe("build markdown text", () => {
+    const defaultHeadings = [
+        {
+          heading: "foo",
+          level: 2,
+        },
+        {
+          heading: "![[bar emb]]",
+          level: 2,
+        },
+      ] as HeadingCache[];
+    const embeddedHeadings = {
+      "![[bar emb]]": [
+        {
+          heading: "bar emb L2",
+          level: 2,
+        },
+        {
+          heading: "bar emb L3",
+          level: 3,
+        },
+      ] as HeadingCache[] ,
+    } as EmbeddedHeadings ;
+    it("should match snapshot", () => {
+      const options = {
+        max_depth: 4,
+        min_depth: 1,
+        style: "bullet",
+      } as TableOptions;
+      expect(extractHeadings(mergeHeadings(defaultHeadings,embeddedHeadings), options)).toMatchSnapshot();
+    });
+  });
+})

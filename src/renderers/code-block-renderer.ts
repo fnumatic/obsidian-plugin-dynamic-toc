@@ -6,7 +6,7 @@ import {
   WorkspaceLeaf,
 } from "obsidian";
 import { mergeSettings } from "../utils/config";
-import { extractHeadings, mergeEmbeds } from "../utils/extract-headings";
+import { extractHeadings, embeddedHeadings, mergeHeadings, processableHeadings } from "../utils/extract-headings";
 import { DynamicTOCSettings, TableOptions } from "../types";
 import { TABLE_CLASS_NAME } from "src/constants";
 
@@ -57,17 +57,19 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
   async render(configOverride?: TableOptions) {
     this.container.empty();
     this.container.classList.add(TABLE_CLASS_NAME);
-    const mergedMetaData = mergeEmbeds(
-      this.app.metadataCache,
-      this.filePath,
-      configOverride || this.config
-    )
-    const headings = extractHeadings(
+    const fileMetaData = this.app.metadataCache.getCache(this.filePath)
+    const { headings, embeds } = fileMetaData;
+    const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)
+    
+  //if (not embeds parsing allowed in options ) return fileMetaData;
+    const mergedMetaData = embbedHeadings ? mergeHeadings(headings, embbedHeadings ) : fileMetaData;
+    
+    const headings_ = extractHeadings(
       mergedMetaData,
       configOverride || this.config
     );
     await MarkdownRenderer.renderMarkdown(
-      headings,
+      headings_,
       this.container,
       this.filePath,
       this
