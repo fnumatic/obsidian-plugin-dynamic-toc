@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "obsidian-plugin dev -S src/styles.css src/main.ts",
-    "prebuild": "yarn test",
+    "prebuild": "npm test",
     "type-check": "tsc --noEmit",
     "build": "obsidian-plugin build -S src/styles.css src/main.ts -o .",
     "release:dry": "standard-version -t '' --dry-run",
