@@ -2,31 +2,34 @@ import { CachedMetadata, MetadataCache, parseLinktext,HeadingCache, EmbedCache }
 import { Heading } from "../models/heading";
 import { TableOptions } from "../types";
 
-export type EmbeddedHeadings = {[key:string]:HeadingCache[]}
+export type EmbeddedHeadings = { [key: string]: HeadingCache[] }
+type StringsNum = [string[], number]
+
 
 export function extractHeadings(
   fileMetaData: CachedMetadata,
   options: TableOptions
 ) {
-  if (!fileMetaData?.headings) return "";
-  const { headings } = fileMetaData;
-  const processableHeadings = headings.filter(
-    (h) => !!h && h.level >= options.min_depth && h.level <= options.max_depth
-  );
-  if (!processableHeadings.length) return "";
+  const { headings } = fileMetaData || {};
 
-  const headingInstances = processableHeadings.map((h) => new Heading(h));
-  if (options.style === "inline") {
-    return buildInlineMarkdownText(headingInstances, options);
-  }
+  const processableHeadings = (headings || [])
+                                .filter(isProcessable(options))
+                                .map((h) => new Heading(h));  
 
-  return buildMarkdownText(headingInstances, options);
+  return buildMarkdown(processableHeadings,options);
 }
 
-export function processableHeadings (options:TableOptions, headings:HeadingCache[]){
-  return headings.filter(
-    (h) => !!h && h.level >= options.min_depth && h.level <= options.max_depth
-  );
+function buildMarkdown(headings:Heading[], options: TableOptions){
+  return  (!headings.length)           ? ""
+        : (options.style === "inline") ? buildInlineMarkdownText(headings, options)
+        :                                buildMarkdownText(headings, options);
+}
+
+function isProcessable (options:TableOptions){
+  return (h: HeadingCache) => 
+            !!h 
+            && h.level >= options.min_depth 
+            && h.level <= options.max_depth
 }
 
 export function embeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache[]) : EmbeddedHeadings {
@@ -42,27 +45,21 @@ export function embeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache
     .reduce(grabEmbeddedHeadings,{} ) ;
 }
 
-export function mergeHeadings(headings:HeadingCache[], embeddedHeadings:EmbeddedHeadings) {
-  console.log(mergeHeadings.name, embeddedHeadings);
-  
-  const insertHeadings = (h: HeadingCache): HeadingCache []=> {
-    const offset = h.level;
-    const eheadings = embeddedHeadings[h.heading]
-                      ?.filter((h:HeadingCache) => h.level > 1)
-                      .map(tweakOffset(offset));
-                      console.log(eheadings);
-                      
-    return (eheadings) ? [h, ...eheadings] : [h];
-  };
-  
-  const patchedHeadings = headings.flatMap(insertHeadings);
-  console.log(mergeHeadings.name, patchedHeadings);
+export function mergeHeadings(headings_:HeadingCache[], embeddedHeadings:EmbeddedHeadings) : CachedMetadata {
+  const insertHeadings = (h: HeadingCache) => {
+    const eheadings = (embeddedHeadings[h.heading] || [])
+                      .filter(h_ => h_.level > 1)
+                      .map(tweakOffset(h.level));
 
-  return {headings:patchedHeadings} as CachedMetadata;
+    return [h, ...eheadings];
+  };
+
+  const headings = headings_.flatMap(insertHeadings);
+  return { headings };
 }
 
 function tweakOffset(offset: number)  {
-  return (h: HeadingCache) => ({ ...h, level: h.level + offset - 1 } as HeadingCache);
+  return (h: HeadingCache) => ({ ...h, level: h.level + offset - 1 });
 }
 
 function linkToCachedMetadata(link:string, metadataCache: MetadataCache) {
@@ -76,11 +73,14 @@ function getIndicator(
   firstLevel: number,
   options: TableOptions
 ) {
-  const defaultIndicator = (options.style === "number" && "1.") || "-";
-  if (!options.varied_style) return defaultIndicator;
-  // if the heading is at the same level as the first heading and varied_style is true, then only set the first indicator to the selected style
-  if (heading.level === firstLevel) return defaultIndicator;
-  return options.style === "number" ? "-" : "1.";
+  const defaultIndicator = options.style === "number" ? "1." : "-";
+  const reversedIndicator = options.style === "number" ? "-" : "1.";
+
+  return    !options.varied_style         ? defaultIndicator
+          // if the heading is at the same level as the first heading and varied_style is true, 
+          // then only set the first indicator to the selected style
+          : heading.level === firstLevel  ? defaultIndicator
+          : reversedIndicator;
 }
 
 /**
@@ -90,30 +90,33 @@ function getIndicator(
  * @returns
  */
 function buildMarkdownText(headings: Heading[], options: TableOptions): string {
-  const firstHeadingDepth = headings[0].level;
-  const list: string[] = [];
-  if (options.title) {
-    list.push(`${options.title}`);
+  const headerString_ =  headerString(headings[0].level, options);
+  const list: string[] = options.title ? [`${options.title}`] : []
+
+  const [hss,_]= headings.reduce(headerString_, [[], 0] )
+  return [...list,...hss].join("\n");
+  
+}
+
+function headerString(depth:number, options: TableOptions){
+  return ([hs, indent_] :StringsNum, heading: Heading): StringsNum => {
+    const itemIndication = getIndicator(heading, depth, options);
+    const { whiteSpace, indent } = calculateIndent(heading, depth, indent_ , options);
+
+    const s = `${whiteSpace}${itemIndication} ${heading.markdownHref}`;
+    return [[...hs, s], indent];
   }
+}
 
-  let previousIndent = 0;
-  for (let i = 0; i < headings.length; i++) {
-    const heading = headings[i];
+function calculateIndent(heading: Heading, firstHeadingDepth: number, indent_: number, options: TableOptions) {
+  const a_i_h = options.allow_inconsistent_headings;
 
-    const itemIndication = getIndicator(heading, firstHeadingDepth, options);
-    let numIndents = new Array(Math.max(0, heading.level - firstHeadingDepth));
+  const l = Math.max(0, heading.level - firstHeadingDepth);
+  const l2 = a_i_h && (l - indent_ > 1) ? indent_ + 1 : l;
 
-    if (options.allow_inconsistent_headings) {
-      if (numIndents.length - previousIndent > 1) {
-        numIndents = new Array(previousIndent + 1);
-      }
-      previousIndent = numIndents.length;
-    }
-
-    const indent = numIndents.fill("\t").join("");
-    list.push(`${indent}${itemIndication} ${heading.markdownHref}`);
-  }
-  return list.join("\n");
+  const indent = a_i_h ? l : indent_
+  const whiteSpace = new Array(l2).fill("\t").join("");
+  return { indent, whiteSpace };
 }
 
 /**
@@ -123,15 +126,13 @@ function buildMarkdownText(headings: Heading[], options: TableOptions): string {
  * @returns
  */
 function buildInlineMarkdownText(headings: Heading[], options: TableOptions) {
-  const highestDepth = headings
-    .map((h) => h.level)
-    .reduce((a, b) => Math.min(a, b));
-  // all headings at the same level as the highest depth
-  const topLevelHeadings = headings.filter(
-    (heading) => heading.level === highestDepth
-  );
-  const delimiter = options.delimiter ? options.delimiter : "|";
-  return topLevelHeadings
-    .map((heading) => `${heading.markdownHref}`)
+  const levels = headings.map(h => h.level);
+  const highestDepth = Math.min(...levels);
+  const delimiter = options.delimiter || "|";
+
+  return headings
+    // all headings at the same level as the highest depth
+    .filter(h => h.level === highestDepth)
+    .map(h => `${h.markdownHref}`)
     .join(` ${delimiter.trim()} `);
 }

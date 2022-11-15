@@ -6,7 +6,7 @@ import {
   WorkspaceLeaf,
 } from "obsidian";
 import { mergeSettings } from "../utils/config";
-import { extractHeadings, embeddedHeadings, mergeHeadings, processableHeadings } from "../utils/extract-headings";
+import { extractHeadings, embeddedHeadings, mergeHeadings } from "../utils/extract-headings";
 import { DynamicTOCSettings, TableOptions } from "../types";
 import { TABLE_CLASS_NAME } from "src/constants";
 
