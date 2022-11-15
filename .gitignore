@@ -6,6 +6,6 @@ yarn.lock
 .npmrc
 dist/
 .DS_STORE
-#main.js
+main.js
 styles.css
 .hotreload
