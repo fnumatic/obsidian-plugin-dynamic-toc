@@ -1,9 +1,9 @@
 {
   "id": "obsidian-dynamic-toc",
   "name": "Dynamic Table of Contents",
-  "author": "aidurber",
+  "author": "fnumatic",
   "description": "An Obsidian plugin to generate Tables of Contents that stay up to date with your document outline.",
   "minAppVersion": "0.11.0",
-  "version": "0.0.28",
+  "version": "0.0.30",
   "repo": "fnumatic/obsidian-plugin-dynamic-toc"
 }
