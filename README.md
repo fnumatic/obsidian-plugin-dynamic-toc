@@ -1,5 +1,10 @@
-# ⚠️ Notice
-I'm unable to find the time to keep this repository well maintained, and up-to-date with Obsidian. Life gets in the way. This plugin should be forked/rebuilt by someone who is willing to find the time to build a plugin that the Obsidian community deserves. 
+# Notice
+Unfortunately, Andrew [@Aidurber](https://www.github.com/Aidurber) is no longer actively developing this plugin. 
+Collecting and processing information with Obsidian is deeply integrated in my daily workflow.
+Therefore I decided to keep this plugin somewhat up to date and fix some bugs. 
+
+I will try to implement some feature requests as long as i understand them and it makes some sense in the context of this plugin.
+I try to release regularly via Github. Please use the [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin for managing installs and updates.
 
 
 # Obsidian Dynamic ToC
