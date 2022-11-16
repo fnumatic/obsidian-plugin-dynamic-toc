@@ -11,32 +11,54 @@ export class Heading {
     return this.cached.heading;
   }
   get isLink(): boolean {
-    return /\[\[(.*?)\]\]/.test(this.cached.heading);
+    const h = this.cached.heading
+
+    const isLnk = linkReg.test(h)
+    const isManyLnk = manylinkReg.test(h)
+    return  isLnk && !isManyLnk;
   }
   get href(): string | null {
     if (!this.isLink) return null;
-    const value = this.parseMarkdownLink(this.rawHeading);
-    const parts = value.split("|");
-    return `#${parts.join(" ")}`;
+    const value = parseMarkdownLink(this.rawHeading)
+    return `#${rmPipe(value)}`;
   }
   get markdownHref(): string | null {
-    if (!this.isLink) return `[[#${this.rawHeading}]]`;
-    const value = this.parseMarkdownLink(this.rawHeading);
-    const parts = value.split("|");
-    const hasAlias = parts.length > 1;
-    if (!hasAlias) {
-      return `[[#${parts[0]}]]`;
-    }
+    if (!this.isLink) return hd(rmBrckt(this.rawHeading));
+    const value = parseMarkdownLink(this.rawHeading);
+    if (!hasAlias(value)) return hd(value);
 
     // The way obsidian needs to render the link is to have the link be
     // the header + alias such as [[#Something Alt Text]]
     // Then we need to append the actual alias
-    const link = parts.join(" ");
-    return `[[#${link}|${parts[1]}]]`;
+    const part = value.split("|")[1];
+    const link = rmPipe(value);
+    return hd(`${link}|${part}`);
   }
 
-  private parseMarkdownLink(link: string): string {
-    const [, base] = link.match(/\[\[(.*?)]\]/) || [];
-    return base;
-  }
+}
+
+const linkReg = /^\!?\[\[(.*?)\]\]$/;
+const manylinkReg = /\]\](.*?)\[\[/;
+
+function hd(txt:string){
+  return `[[#${txt}]]`
+}
+
+function parseMarkdownLink(link: string): string {
+  const [, base] = link.match(linkReg) || [];
+  return base;
+}
+
+function rmBrckt(s: string) {
+  return s
+    .replace(/\[\[/g, '')
+    .replace(/\]\]/g, '');
+}
+
+function rmPipe(s: string){
+  return s.replace("|", " ");
+}
+
+function hasAlias(s: string){
+  return s.includes("|");
 }

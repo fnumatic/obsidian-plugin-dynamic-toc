@@ -39,5 +39,39 @@ describe("Heading Model", () => {
         expect(heading.markdownHref).toBe("[[#Something Alt Text|Alt Text]]");
       });
     });
+
+    describe("With mixed text and link", () => {
+      const heading = new Heading({
+        heading: "foo [[bar]]",
+        level: 1,
+      } as HeadingCache);
+
+      it("isLink should be false", () => {
+        expect(heading.isLink).toBeFalsy();
+      });
+      it("href should be null", () => {
+        expect(heading.href).toBeNull();
+      });
+      it("markdownHref should be correct", () => {
+        expect(heading.markdownHref).toBe("[[#foo bar]]");
+      });
+    });
+
+    describe("With many links", () => {
+      const heading = new Heading({
+        heading: "[[foo]] [[bar]]",
+        level: 1,
+      } as HeadingCache);
+
+      it("isLink should be false", () => {
+        expect(heading.isLink).toBeFalsy();
+      });
+      it("href should be null", () => {
+        expect(heading.href).toBeNull();
+      });
+      it("markdownHref should be correct", () => {
+        expect(heading.markdownHref).toBe("[[#foo bar]]");
+      });
+    })
   });
 });
