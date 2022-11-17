@@ -1,7 +1,7 @@
 import { App, MarkdownRenderChild, MarkdownRenderer, TFile } from "obsidian";
 import { TABLE_CLASS_NAME, TABLE_CLASS_SELECTOR } from "src/constants";
 import { DynamicTOCSettings } from "../types";
-import { extractHeadings } from "../utils/extract-headings";
+import { extractHeadings, embeddedHeadings, mergeHeadings } from "../utils/extract-headings";
 
 export class DynamicInjectionRenderer extends MarkdownRenderChild {
   constructor(
@@ -43,14 +43,21 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
   };
 
   async render() {
-    const headings = extractHeadings(
-      this.app.metadataCache.getCache(this.filePath),
+    const fileMetaData = this.app.metadataCache.getCache(this.filePath)
+    const { headings, embeds } = fileMetaData;
+    const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)
+    
+  //if (not embeds parsing allowed in options ) return fileMetaData;
+    const mergedMetaData = embbedHeadings ? mergeHeadings(headings, embbedHeadings ) : fileMetaData;
+    
+    const headings_ = extractHeadings(
+      mergedMetaData,
       this.settings
     );
     const newElement = document.createElement("div");
     newElement.classList.add(TABLE_CLASS_NAME);
     await MarkdownRenderer.renderMarkdown(
-      headings,
+      headings_,
       newElement,
       this.filePath,
       this
