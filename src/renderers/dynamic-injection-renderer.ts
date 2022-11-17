@@ -67,7 +67,7 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
     const existing = this.containerEl.querySelector(TABLE_CLASS_SELECTOR);
     // We need to keep cleaning up after ourselves on settings or file changes
     if (existing) {
-      this.containerEl.removeChild(existing);
+      existing.parentNode.removeChild(existing);
     }
     // Attach the table to the parent of the match
     this.match.parentNode.appendChild(newElement);
