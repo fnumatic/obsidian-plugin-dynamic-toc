@@ -11,6 +11,7 @@ export const DEFAULT_SETTINGS: DynamicTOCSettings = {
   externalStyle: "None",
   supportAllMatchers: false,
   allow_inconsistent_headings: false,
+  embeddedHeadings : true
 };
 
 export const TABLE_CLASS_NAME = "dynamic-toc";

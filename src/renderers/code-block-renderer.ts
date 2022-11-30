@@ -55,14 +55,16 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
   };
 
   async render(configOverride?: TableOptions) {
+    const settings= configOverride || this.config
     this.container.empty();
     this.container.classList.add(TABLE_CLASS_NAME);
     const fileMetaData = this.app.metadataCache.getCache(this.filePath)
     const { headings, embeds } = fileMetaData;
     const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)
     
-  //if (not embeds parsing allowed in options ) return fileMetaData;
-    const mergedMetaData = embbedHeadings ? mergeHeadings(headings, embbedHeadings ) : fileMetaData;
+    const mergedMetaData = settings.embeddedHeadings && embbedHeadings 
+      ? mergeHeadings(headings, embbedHeadings ) 
+      : fileMetaData;
     
     const headings_ = extractHeadings(
       mergedMetaData,

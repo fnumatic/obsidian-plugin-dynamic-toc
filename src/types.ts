@@ -7,6 +7,7 @@ export interface TableOptions {
   allow_inconsistent_headings: boolean;
   delimiter?: string;
   varied_style?: boolean;
+  embeddedHeadings: boolean;
 }
 
 export const EXTERNAL_MARKDOWN_PREVIEW_STYLE = {

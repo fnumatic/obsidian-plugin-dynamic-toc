@@ -152,5 +152,18 @@ export class DynamicTOCSettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
       );
+    new Setting(containerEl)
+      .setName("Enable embedded headings")
+      .setDesc(
+        "Render headings from embedded notes"
+      )
+      .addToggle((cb) =>
+        cb
+          .setValue(this.plugin.settings.embeddedHeadings)
+          .onChange(async (val) => {
+            this.plugin.settings.embeddedHeadings = val;
+            await this.plugin.saveSettings();
+          })
+      );
   }
 }

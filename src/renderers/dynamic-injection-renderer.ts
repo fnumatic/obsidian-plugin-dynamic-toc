@@ -48,7 +48,9 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
     const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)
     
   //if (not embeds parsing allowed in options ) return fileMetaData;
-    const mergedMetaData = embbedHeadings ? mergeHeadings(headings, embbedHeadings ) : fileMetaData;
+    const mergedMetaData = this.settings.embeddedHeadings && embbedHeadings 
+      ? mergeHeadings(headings, embbedHeadings ) 
+      : fileMetaData;
     
     const headings_ = extractHeadings(
       mergedMetaData,
