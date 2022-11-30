@@ -10,16 +10,9 @@ export function mergeSettings(
   options: TableOptions,
   settings: DynamicTOCSettings
 ): TableOptions {
-  const merged = Object.assign({}, settings, options);
-  return Object.keys(merged).reduce((acc, curr: keyof TableOptions) => {
-    const value = options[curr];
-    const isEmptyValue = typeof value === "undefined" || value === null;
-    return {
-      ...acc,
-      [curr]: isEmptyValue ? settings[curr] : value,
-    };
-  }, {} as TableOptions);
+  return {...options, ...settings} as TableOptions;
 }
+
 /**
  * Parse the YAML source and merge it with plugin settings
  * @param source - Code block YAML source
