@@ -8,9 +8,9 @@ import { DynamicTOCSettings, TableOptions } from "../types";
  */
 export function mergeSettings(
   options: TableOptions,
-  settings: DynamicTOCSettings
+  settings: DynamicTOCSettings //settingspage
 ): TableOptions {
-  return {...options, ...settings} as TableOptions;
+  return {...settings, ...options} as TableOptions;
 }
 
 /**
