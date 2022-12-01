@@ -40,17 +40,17 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
   }
 
   onActiveLeafChangeHandler = (_: WorkspaceLeaf) => {
-    const activeFile = this.app.workspace.getActiveFile();
-    this.filePath = activeFile.path;
-    this.onFileChangeHandler(activeFile);
+   const vstate=_.getViewState()
+   if (vstate.state?.mode==="source" && ! vstate.state?.source) {
+    this.render();
+   }
   };
 
   onSettingsChangeHandler = (settings: DynamicTOCSettings) => {
     this.render(mergeSettings(this.config, settings));
   };
   onFileChangeHandler = (file: TFile) => {
-    this.filePath = file.path;
-    if (file.deleted) return;
+    if (file.deleted || file.path !== this.filePath) return;
     this.render();
   };
 
