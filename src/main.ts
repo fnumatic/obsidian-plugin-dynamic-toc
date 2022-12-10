@@ -10,6 +10,7 @@ import {
 } from "./types";
 import { DynamicInjectionRenderer } from "./renderers/dynamic-injection-renderer";
 import { InsertCommandModal } from "./insert-command.modal";
+import {tocField} from "./extension/field"
 
 export default class DynamicTOCPlugin extends Plugin {
   settings: DynamicTOCSettings;
@@ -62,6 +63,7 @@ export default class DynamicTOCPlugin extends Plugin {
         }
       }
     );
+    this.registerEditorExtension([tocField(this.settings)])
   };
 
   loadSettings = async () => {
