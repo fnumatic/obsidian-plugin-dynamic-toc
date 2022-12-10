@@ -31,9 +31,7 @@
     
   ],
   
-  "watch": true,
   "target": "es2016",
   "logLevel": "info",
-  "sourcemap":  "inline",
   "treeShaking": true
   }

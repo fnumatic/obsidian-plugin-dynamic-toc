@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "obsidian-plugin dev -e esbuild.config.json -S src/styles.css src/main.ts ",
     "type-check": "tsc --noEmit",
-    "build": "obsidian-plugin build -e esbuild.config.js -S src/styles.css src/main.ts  ",
+    "build": "obsidian-plugin build -e esbuild.config.json -S src/styles.css src/main.ts  ",
     "release:dry": "standard-version -t '' --dry-run",
     "release": "standard-version -t '' -a",
     "test": "jest",
