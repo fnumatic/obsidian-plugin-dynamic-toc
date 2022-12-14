@@ -26,11 +26,14 @@
     "standard-version": "^9.5.0",
     "stringify-package": "^1.0.1",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "overrides": {
     "obsidian-plugin-cli": {
       "esbuild": "$esbuild"
     }
+  },
+  "dependencies": {
+    "rambda": "^7.4.0"
   }
 }

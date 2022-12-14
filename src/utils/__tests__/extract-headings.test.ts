@@ -199,3 +199,50 @@ describe("Extract embedded headings", () => {
     });
   });
 })
+
+describe("Extract embedded headings 2", () => {
+  describe("build markdown text", () => {
+    const defaultHeadings = [
+        {
+          heading: "foo",
+          level: 2,
+        },
+        {
+          heading: "![[bar emb#emb L2.1]]",
+          level: 2,
+        },
+      ] as HeadingCache[];
+    const embeddedHeadings = {
+      "![[bar emb#emb L2.1]]": [
+        {
+          heading: "bar emb",
+          level: 1,
+        },
+        {
+          heading: "emb L2.1",
+          level: 2,
+        },
+        {
+          heading: "emb L3.1",
+          level: 3,
+        },
+        {
+          heading: "emb L2.2",
+          level: 2,
+        },
+        {
+          heading: "emb L3.2",
+          level: 3,
+        },
+      ] as HeadingCache[] ,
+    } as EmbeddedHeadings ;
+    it("should match snapshot", () => {
+      const options = {
+        max_depth: 5,
+        min_depth: 1,
+        style: "bullet",
+      } as TableOptions;
+      expect(extractHeadings(mergeHeadings(defaultHeadings,embeddedHeadings), options)).toMatchSnapshot();
+    });
+  });
+})

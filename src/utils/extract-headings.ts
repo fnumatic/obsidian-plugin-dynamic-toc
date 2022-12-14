@@ -1,10 +1,15 @@
 import { CachedMetadata, MetadataCache, parseLinktext,HeadingCache, EmbedCache } from "obsidian";
 import { Heading } from "../models/heading";
 import { TableOptions } from "../types";
+import { pipe, dropWhile, takeWhile, find, filter, map } from "rambda"
 
 export type EmbeddedHeadings = { [key: string]: HeadingCache[] }
 type StringsNum = [string[], number]
 
+declare module "rambda" {
+ function dropWhile<T>(fn: Predicate<T>):(iterable: T[]) => T[];
+ function takeWhile<T>(fn: Predicate<T>):(iterable: T[]) => T[];
+}
 
 export function extractHeadings(
   fileMetaData: CachedMetadata,
@@ -45,12 +50,27 @@ export function embeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache
     .reduce(grabEmbeddedHeadings,{} ) ;
 }
 
+function destructEmbHC({ heading }: HeadingCache) {
+  if (!heading.startsWith("!")) return heading
+  const inner = heading
+    .split(/\!\[\[(.*?)\]\]/)
+    .filter(Boolean)[0]
+    .split("#")
+
+  return inner[1] || inner[0];
+}
+
 export function mergeHeadings(headings_:HeadingCache[], embeddedHeadings:EmbeddedHeadings) : CachedMetadata {
   const insertHeadings = (h: HeadingCache) => {
-    const eheadings = (embeddedHeadings[h.heading] || [])
-                      .filter(h_ => h_.level > 1)
-                      .map(tweakOffset(h.level));
-
+    const hs = embeddedHeadings[h.heading] || []
+    const hpart = destructEmbHC(h);
+    const hpartlevel= find(hc=> hc.heading === hpart, hs)?.level || -1;
+    const eheadings= pipe(
+      dropWhile<HeadingCache>(hc => hpartlevel !== -1 && hc.heading !== hpart),
+      takeWhile(hc  => hc.heading === hpart || hc.level > hpartlevel) ,
+      filter(hc => hc.level > 1),
+      map(tweakOffset(h.level))
+   )(hs) 
     return [h, ...eheadings];
   };
 
