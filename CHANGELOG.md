@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.28](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.33...0.0.28) (2024-02-01)
+
+
+### Features
+
+* modernize updater scripts ([0d39e9b](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/0d39e9b9965ca9c31587ff6429b702df86dc65c3))
+
+
+### Bug Fixes
+
+* render embd header subtree ([ddfaf58](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/ddfaf58dc7d35c9464bfc2e7f6fe71ba7e188881))
+
 ### [0.0.27](https://github.com/Aidurber/obsidian-plugin-dynamic-toc/compare/0.0.26...0.0.27) (2022-03-05)
 
 
