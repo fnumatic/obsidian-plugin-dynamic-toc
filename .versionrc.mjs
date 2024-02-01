@@ -11,7 +11,5 @@ const packageJson = {
   filename: "package.json",
   type: "json",
 };
-module.exports = {
-  bumpFiles: [packageJson, versionUpdater, manifestUpdater],
-  packageFiles: [packageJson],
-};
+export const bumpFiles = [packageJson, versionUpdater, manifestUpdater];
+export const packageFiles = [packageJson];
