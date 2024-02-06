@@ -12,19 +12,19 @@ import {
   EditorView,
 } from "@codemirror/view";
 import { SyntaxNodeRef } from "@lezer/common";
-import { editorLivePreviewField,   } from "obsidian";
+import { App, editorLivePreviewField,   } from "obsidian";
 import { DynamicTOCSettings } from "src/types";
 import { embeddedHeadings, extractHeadings, mergeHeadings } from "src/utils/extract-headings";
 import {TocWidget} from "./toc"
 
-export const tocField= (settings: DynamicTOCSettings) =>{
+export const tocField= (app: App,settings: DynamicTOCSettings) =>{
  return StateField.define<DecorationSet>({
   
-  create:(state:EditorState) => renderInline(state, state.selection ,settings) ?? Decoration.none,
+  create:(state:EditorState) => renderInline(app, state, state.selection ,settings) ?? Decoration.none,
 
   update(oldState: DecorationSet, tr: Transaction): DecorationSet {
     if(! tr.state.field(editorLivePreviewField)) return Decoration.none
-    return renderInline(tr.state, tr.selection, settings) ?? Decoration.none 
+    return renderInline(app, tr.state, tr.selection, settings) ?? Decoration.none 
   },
 
   provide: f => EditorView.decorations.from(f) 
@@ -32,7 +32,7 @@ export const tocField= (settings: DynamicTOCSettings) =>{
 }
 
 
-function renderInline(state: EditorState, selection:EditorSelection, settings: DynamicTOCSettings) {
+function renderInline(app: App, state: EditorState, selection:EditorSelection, settings: DynamicTOCSettings) {
   const builder = new RangeSetBuilder<Decoration>();
 	const currentFile = app?.workspace.getActiveFile();
 	    if (!currentFile) return Decoration.none;
@@ -61,7 +61,7 @@ function renderInline(state: EditorState, selection:EditorSelection, settings: D
 	          start,
 	          end,
 	          Decoration.replace({
-	            widget: new TocWidget(headings_,currentFile.path,node.from),
+	            widget: new TocWidget(app, headings_,currentFile.path,node.from),
 	            block: true,
 	          })
 	        );

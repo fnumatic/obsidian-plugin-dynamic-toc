@@ -58,7 +58,8 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
     );
     const newElement = document.createElement("div");
     newElement.classList.add(TABLE_CLASS_NAME);
-    await MarkdownRenderer.renderMarkdown(
+    await MarkdownRenderer.render(
+      this.app,
       headings_,
       newElement,
       this.filePath,

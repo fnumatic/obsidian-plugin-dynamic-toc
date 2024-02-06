@@ -1,10 +1,11 @@
 import { EditorView, WidgetType } from "@codemirror/view";
 import { EditorSelection } from "@codemirror/state";
-import { MarkdownRenderer, setIcon } from "obsidian";
+import { App, MarkdownRenderer, setIcon } from "obsidian";
 
 
 export class TocWidget extends WidgetType {
     constructor(
+        private app:App,
         private data:string,
         private path:string,
         private selection:number
@@ -29,7 +30,7 @@ export class TocWidget extends WidgetType {
     },
     (el) =>{
         el.appendChild(div3)
-        MarkdownRenderer.renderMarkdown(this.data,el,this.path,null)
+        MarkdownRenderer.render(this.app, this.data,el,this.path,null)
     });
   }
 }

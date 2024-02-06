@@ -70,7 +70,8 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
       mergedMetaData,
       configOverride || this.config
     );
-    await MarkdownRenderer.renderMarkdown(
+    await MarkdownRenderer.render(
+      this.app,
       headings_,
       this.container,
       this.filePath,

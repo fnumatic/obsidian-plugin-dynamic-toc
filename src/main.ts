@@ -63,7 +63,7 @@ export default class DynamicTOCPlugin extends Plugin {
         }
       }
     );
-    this.registerEditorExtension([tocField(this.settings)])
+    this.registerEditorExtension([tocField(this.app, this.settings)])
   };
 
   loadSettings = async () => {
