@@ -1,0 +1,33 @@
+
+{
+  "git": {
+     "commitMessage": "chore(release): ${version}",
+      "commit": true,
+      "tag": true,
+      "requireCommits": false,
+      "requireCleanWorkingDir": false
+  },
+  "github": {
+    "release": true,
+    "releaseName": "${version}",
+    "preRelease": true,
+    "assets": "dist/*",
+    "autoGenerate": true
+  },
+  "npm": {
+    "publish": false
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "angular"
+      },
+      "header": "# Changelog",
+      "infile": "CHANGELOG.md",
+      "ignoreRecommendedBump": true
+    },
+    "./scripts/ob-bumper.mjs": {
+      "indent": 2
+    }
+  }
+}
