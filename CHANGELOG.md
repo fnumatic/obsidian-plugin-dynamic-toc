@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.37](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.36...0.0.37) (2024-2-7)
+
+
+### Bug Fixes
+
+* deprecated renderMarkdown ([0574809](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/05748094e27cf56710bd333f7b548407c5ce177a))
+
+
+### Features
+
+* display toc as inline block ([678401f](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/678401f22963f03e2784370aa197a9cf0ee13ca1))
+
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 ### [0.0.27](https://github.com/Aidurber/obsidian-plugin-dynamic-toc/compare/0.0.26...0.0.27) (2022-03-05)
