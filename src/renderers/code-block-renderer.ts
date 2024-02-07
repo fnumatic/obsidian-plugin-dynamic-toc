@@ -8,7 +8,7 @@ import {
 import { mergeSettings } from "../utils/config";
 import { extractHeadings, embeddedHeadings, mergeHeadings } from "../utils/extract-headings";
 import { DynamicTOCSettings, TableOptions } from "../types";
-import { TABLE_CLASS_NAME } from "src/constants";
+import { TABLE_CLASS_NAME, TABLE_CLASS_NAME_INLINE } from "src/constants";
 
 export class CodeBlockRenderer extends MarkdownRenderChild {
   constructor(
@@ -56,8 +56,11 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
 
   async render(configOverride?: TableOptions) {
     const settings= configOverride || this.config
+    const cls= settings.displayInline ? TABLE_CLASS_NAME_INLINE : null
     this.container.empty();
-    this.container.classList.add(TABLE_CLASS_NAME);
+    this.container = this.container.createSpan();
+    this.container.classList.add(TABLE_CLASS_NAME,cls);
+    
     const fileMetaData = this.app.metadataCache.getCache(this.filePath)
     const { headings, embeds } = fileMetaData;
     const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)

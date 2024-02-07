@@ -11,10 +11,11 @@ export const DEFAULT_SETTINGS: DynamicTOCSettings = {
   externalStyle: "None",
   supportAllMatchers: false,
   allow_inconsistent_headings: false,
-  embeddedHeadings : true
+  embeddedHeadings: true,
 };
 
 export const TABLE_CLASS_NAME = "dynamic-toc";
+export const TABLE_CLASS_NAME_INLINE = "dynamic-toc-inline";
 export const TABLE_CLASS_SELECTOR = `.${TABLE_CLASS_NAME}`;
 
 export const ALL_MATCHERS = Object.keys(

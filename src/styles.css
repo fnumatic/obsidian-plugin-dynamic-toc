@@ -22,3 +22,7 @@
 .is-live-preview .dynamic-toc ol {
     white-space: normal;
 }
+
+.dynamic-toc-inline > p{
+    display: inline;
+}
