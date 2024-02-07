@@ -1,5 +1,5 @@
 import { Editor, MarkdownPostProcessorContext, Plugin } from "obsidian";
-import { parseConfig } from "./utils/config";
+import { mergeSettings, parseConfig } from "./utils/config";
 import { ALL_MATCHERS, DEFAULT_SETTINGS } from "./constants";
 import { CodeBlockRenderer } from "./renderers/code-block-renderer";
 import { DynamicTOCSettingsTab } from "./settings-tab";
@@ -7,6 +7,8 @@ import {
   DynamicTOCSettings,
   ExternalMarkdownKey,
   EXTERNAL_MARKDOWN_PREVIEW_STYLE,
+  TableOptions,
+  INLINE_TOC_MATCHER,
 } from "./types";
 import { DynamicInjectionRenderer } from "./renderers/dynamic-injection-renderer";
 import { InsertCommandModal } from "./insert-command.modal";
@@ -40,6 +42,15 @@ export default class DynamicTOCPlugin extends Plugin {
 
     this.registerMarkdownPostProcessor(
       (el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
+        const codeblocks = el.findAll("code");
+        const options = mergeSettings({ style: "inline" , displayInline: true } as TableOptions, this.settings);
+
+        for (let codeblock of codeblocks) {
+          if (codeblock.innerText.trim() != INLINE_TOC_MATCHER) continue
+          ctx.addChild(
+            new CodeBlockRenderer(this.app, options, ctx.sourcePath, codeblock)
+          );
+        }
         const matchers =
           this.settings.supportAllMatchers === true
             ? ALL_MATCHERS

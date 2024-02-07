@@ -8,6 +8,7 @@ export interface TableOptions {
   delimiter?: string;
   varied_style?: boolean;
   embeddedHeadings: boolean;
+  displayInline?: boolean;
 }
 
 export const EXTERNAL_MARKDOWN_PREVIEW_STYLE = {
@@ -18,6 +19,8 @@ export const EXTERNAL_MARKDOWN_PREVIEW_STYLE = {
   DevonThink: "{{toc}}",
   TheBrain: "[/toc/]",
 };
+
+export const INLINE_TOC_MATCHER = "toc@@inline";
 
 export type ExternalMarkdownKey = keyof typeof EXTERNAL_MARKDOWN_PREVIEW_STYLE;
 export interface DynamicTOCSettings extends TableOptions {
