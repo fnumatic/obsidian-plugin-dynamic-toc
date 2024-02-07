@@ -83,6 +83,16 @@ Inline styles render the highest level of heading such as H2 `## Heading 2`, you
 
 See [Feature Request: Inline Links](https://github.com/Aidurber/obsidian-plugin-dynamic-toc/issues/42)
 
+#### Inline Render
+
+Inline styled ToC can now render fully inline.
+
+Text before ` ```toc@@inline``` ` Text after
+
+Text before ` Heading 1 | Heading 2 ` Text after
+
+See [Feature Request: Inline Rendering](https://github.com/Aidurber/obsidian-plugin-dynamic-toc/issues/70)
+
 ### Varied Style
 
 Varied style allows for setting the topmost level of your headings, and the rest of the levels to the opposite style.
