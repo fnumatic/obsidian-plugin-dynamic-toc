@@ -14,9 +14,9 @@ export const DEFAULT_SETTINGS: DynamicTOCSettings = {
   embeddedHeadings: true,
 };
 
-export const TABLE_CLASS_NAME = "dynamic-toc";
-export const TABLE_CLASS_NAME_INLINE = "dynamic-toc-inline";
-export const TABLE_CLASS_SELECTOR = `.${TABLE_CLASS_NAME}`;
+export const CLASS_TOC = "dynamic-toc";
+export const CLASS_TOC_INLINE = "dynamic-toc-inline";
+export const SELECTOR_TOC = `.${CLASS_TOC}`;
 
 export const ALL_MATCHERS = Object.keys(
   EXTERNAL_MARKDOWN_PREVIEW_STYLE

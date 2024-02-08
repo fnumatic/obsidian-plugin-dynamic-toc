@@ -1,5 +1,5 @@
 import { App, MarkdownRenderChild, MarkdownRenderer, TFile } from "obsidian";
-import { TABLE_CLASS_NAME, TABLE_CLASS_SELECTOR } from "src/constants";
+import { CLASS_TOC, SELECTOR_TOC } from "src/constants";
 import { DynamicTOCSettings } from "../types";
 import { extractHeadings, embeddedHeadings, mergeHeadings } from "../utils/extract-headings";
 
@@ -57,7 +57,7 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
       this.settings
     );
     const newElement = document.createElement("div");
-    newElement.classList.add(TABLE_CLASS_NAME);
+    newElement.classList.add(CLASS_TOC);
     await MarkdownRenderer.render(
       this.app,
       headings_,
@@ -67,7 +67,7 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
     );
     // Keep the match in the document as a hook but hide it
     this.match.style.display = "none";
-    const existing = this.containerEl.querySelector(TABLE_CLASS_SELECTOR);
+    const existing = this.containerEl.querySelector(SELECTOR_TOC);
     // We need to keep cleaning up after ourselves on settings or file changes
     if (existing) {
       existing.parentNode.removeChild(existing);
