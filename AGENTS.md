@@ -43,7 +43,7 @@
 - Return empty arrays/objects instead of null for collections
 
 ### Testing
-- Jest framework with ts-jest preset
+- Vitest framework
 - Describe/it structure for test organization
 - Mock external dependencies in `__mocks__` directory
 - Snapshot testing for complex outputs

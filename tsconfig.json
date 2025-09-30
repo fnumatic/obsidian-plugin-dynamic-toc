@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
+    "skipLibCheck": true,
     "lib": [
       "dom",
       "es5",

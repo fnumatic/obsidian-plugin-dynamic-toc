@@ -1,8 +1,8 @@
-import { CachedMetadata,HeadingCache } from "obsidian";
+/// <reference types="vitest/globals" />
+
+import type { CachedMetadata, HeadingCache } from "obsidian";
 import { TableOptions, EmbeddedHeadings } from "src/types";
 import { extractHeadings, mergeHeadings } from "../extract-headings";
-
-jest.mock('obsidian');
 
 describe("Extract headings", () => {
   describe("build markdown text", () => {
@@ -40,7 +40,7 @@ describe("Extract headings", () => {
         min_depth: 1,
         style: "number",
       } as TableOptions;
-      expect(extractHeadings(defaultHeadings, options)).toMatchSnapshot();
+      expect(extractHeadings(defaultHeadings as CachedMetadata, options)).toMatchSnapshot();
     });
 
     it("should match snapshot when varied_style is true and style is bullet", () => {

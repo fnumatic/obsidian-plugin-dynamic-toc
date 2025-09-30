@@ -1,4 +1,6 @@
-import { HeadingCache } from "obsidian";
+/// <reference types="vitest/globals" />
+
+import type { HeadingCache } from "obsidian";
 import { Heading } from "../heading";
 
 describe("Heading Model", () => {
