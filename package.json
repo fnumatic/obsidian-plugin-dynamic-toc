@@ -1,41 +1,37 @@
 {
-  "name": "obsidian-plugin-dynamic-toc",
+  "name": "obsidian-dynamic-toc",
   "version": "0.0.37",
   "description": "An Obsidian plugin to generate Tables of Contents that stay up to date with your document outline.",
   "main": "main.js",
   "license": "MIT",
   "scripts": {
-    "dev": "obsidian-plugin dev -e esbuild.config.json -S src/styles.css src/main.ts ",
+    "dev": "node scripts/dev.js",
+    "preview": "node scripts/copy-to-vault.js",
     "type-check": "tsc --noEmit",
-    "build": "obsidian-plugin build -e esbuild.config.json -S src/styles.css src/main.ts  ",
+    "build": "vite build && cp manifest.json dist/",
     "release": "release-it",
     "release:dry": "release-it --dry-run",
     "test": "jest",
     "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "@codemirror/language": "^6.10.1",
-    "@codemirror/state": "^6.4.0",
-    "@codemirror/view": "^6.23.1",
-    "@lezer/common": "^1.2.1",
-    "@release-it/conventional-changelog": "^8.0.1",
-    "@types/jest": "^29.5.11",
-    "builtin-modules": "^3.3.0",
-    "esbuild": "^0.20.0",
-    "jest": "^29.7.0",
+    "@codemirror/language": "^6.11.3",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.38.4",
+    "@lezer/common": "^1.2.3",
+    "@release-it/conventional-changelog": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "builtin-modules": "^5.0.0",
+    "esbuild": "^0.25.10",
+    "jest": "^30.2.0",
     "obsidian": "latest",
-    "obsidian-plugin-cli": "^0.9.0",
-    "release-it": "^17.0.3",
-    "ts-jest": "^29.1.2",
-    "tslib": "^2.6.2",
-    "typescript": "^5.3.3"
-  },
-  "overrides": {
-    "obsidian-plugin-cli": {
-      "esbuild": "$esbuild"
-    }
+    "release-it": "^19.0.5",
+    "ts-jest": "^29.4.4",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7"
   },
   "dependencies": {
-    "rambda": "^9.0.1"
+    "rambda": "^10.3.2"
   }
 }

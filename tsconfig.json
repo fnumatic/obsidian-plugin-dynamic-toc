@@ -7,10 +7,10 @@
     "target": "es6",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "suppressImplicitAnyIndexErrors": true,
     "allowJs": true,
     "noImplicitAny": true,
-    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "lib": [
       "dom",

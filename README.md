@@ -205,7 +205,7 @@ With this option enabled, it will produce the following table of contents:
 ## Contributing
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ### Development
@@ -213,7 +213,7 @@ yarn install
 To start building the plugin with what mode enabled run the following command:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 ### Releasing
@@ -221,7 +221,7 @@ yarn dev
 To start a release build run the following command:
 
 ```bash
-yarn release
+pnpm release
 git push --follow-tags origin main
 ```
 
