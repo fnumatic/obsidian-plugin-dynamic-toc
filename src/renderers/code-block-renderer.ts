@@ -6,7 +6,7 @@ import {
   WorkspaceLeaf,
 } from "obsidian";
 import { mergeSettings } from "../utils/config";
-import { extractHeadings, embeddedHeadings, mergeHeadings } from "../utils/extract-headings";
+import { extractHeadings, getEmbeddedHeadings, mergeHeadings } from "../utils/extract-headings";
 import { DynamicTOCSettings, TableOptions } from "../types";
 import { CLASS_TOC, CLASS_TOC_INLINE } from "src/constants";
 
@@ -62,7 +62,7 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
     
     const fileMetaData = this.app.metadataCache.getCache(this.filePath)
     const { headings, embeds } = fileMetaData;
-    const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)
+    const embbedHeadings = getEmbeddedHeadings(this.app.metadataCache, embeds)
     
     const mergedMetaData = settings.embeddedHeadings && embbedHeadings 
       ? mergeHeadings(headings, embbedHeadings ) 

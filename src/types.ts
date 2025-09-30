@@ -1,4 +1,7 @@
+import { HeadingCache } from "obsidian";
+
 export type BulletStyle = "bullet" | "number" | "inline";
+export type EmbeddedHeadings = { [key: string]: HeadingCache[] };
 export interface TableOptions {
   style: BulletStyle;
   min_depth: number;

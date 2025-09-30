@@ -14,7 +14,7 @@ import {
 import { SyntaxNodeRef } from "@lezer/common";
 import { App, editorLivePreviewField,   } from "obsidian";
 import { DynamicTOCSettings } from "src/types";
-import { embeddedHeadings, extractHeadings, mergeHeadings } from "src/utils/extract-headings";
+import { getEmbeddedHeadings, extractHeadings, mergeHeadings } from "src/utils/extract-headings";
 import {TocWidget} from "./toc"
 
 export const tocField= (app: App,settings: DynamicTOCSettings) =>{
@@ -46,7 +46,7 @@ function renderInline(app: App, state: EditorState, selection:EditorSelection, s
 	        const fileMetaData = app.metadataCache.getCache(currentFile.path)
           
           const { headings, embeds } = fileMetaData;
-          const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)
+          const embbedHeadings = getEmbeddedHeadings(this.app.metadataCache, embeds)
           
           const mergedMetaData = settings.embeddedHeadings && embbedHeadings 
             ? mergeHeadings(headings, embbedHeadings ) 

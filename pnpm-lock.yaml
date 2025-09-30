@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      rambda:
-        specifier: ^10.3.2
-        version: 10.3.2
     devDependencies:
       '@codemirror/language':
         specifier: ^6.11.3
@@ -2175,9 +2171,6 @@ packages:
 
   pure-rand@7.0.1:
     resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
-
-  rambda@10.3.2:
-    resolution: {integrity: sha512-GCM14DK1CG9Fw3YRRoCUc111RA/SZQAGyvrBrdMCBUXIRQ2AVPb1mysON1gOpItuVJ0WQpEb/Eq5FRxU8OxNbg==}
 
   rc9@2.1.2:
     resolution: {integrity: sha512-btXCnMmRIBINM2LDZoEmOogIZU7Qe7zn4BpomSKZ/ykbLObuBdvG+mFq11DL6fjH1DRwHhrlgtYWG96bJiC7Cg==}
@@ -4908,8 +4901,6 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   pure-rand@7.0.1: {}
-
-  rambda@10.3.2: {}
 
   rc9@2.1.2:
     dependencies:

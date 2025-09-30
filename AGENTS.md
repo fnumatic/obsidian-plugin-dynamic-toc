@@ -19,7 +19,7 @@
 - Use explicit types for function parameters and return values
 
 ### Imports
-- External libraries first (obsidian, rambda, etc.)
+- External libraries first (obsidian, etc.)
 - Internal imports grouped by relative path depth
 - Use named imports over default imports when possible
 
@@ -30,7 +30,7 @@
 - Files: kebab-case.ts
 
 ### Code Patterns
-- Functional programming with rambda library
+- Functional programming with native JavaScript methods
 - Optional chaining (`?.`) for null safety
 - Template literals for string interpolation
 - No semicolons at statement ends

@@ -1,15 +1,7 @@
 import { CachedMetadata, MetadataCache, parseLinktext,HeadingCache, EmbedCache } from "obsidian";
 import { Heading } from "../models/heading";
-import { TableOptions } from "../types";
-import { pipe, dropWhile, takeWhile, find, filter, map } from "rambda"
-
-export type EmbeddedHeadings = { [key: string]: HeadingCache[] }
-type StringsNum = [string[], number]
-
-declare module "rambda" {
- function dropWhile<T>(fn: Predicate<T>):(iterable: T[]) => T[];
- function takeWhile<T>(fn: Predicate<T>):(iterable: T[]) => T[];
-}
+import { TableOptions, EmbeddedHeadings } from "../types";
+import "./util";
 
 export function extractHeadings(
   fileMetaData: CachedMetadata,
@@ -37,7 +29,7 @@ function isProcessable (options:TableOptions){
             && h.level <= options.max_depth
 }
 
-export function embeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache[]) : EmbeddedHeadings {
+export function getEmbeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache[]) : EmbeddedHeadings | undefined {
   if (!embeds) return undefined
   
   const grabEmbeddedHeadings = (agg:{}, e:EmbedCache) => {
@@ -60,21 +52,25 @@ function destructEmbHC({ heading }: HeadingCache) {
   return inner[1] || inner[0];
 }
 
-export function mergeHeadings(headings_:HeadingCache[], embeddedHeadings:EmbeddedHeadings) : CachedMetadata {
+export function mergeHeadings(headings_:HeadingCache[] | undefined, embeddedHeadings:EmbeddedHeadings | undefined) : CachedMetadata {
   const insertHeadings = (h: HeadingCache) => {
-    const hs = embeddedHeadings[h.heading] || []
+    const hs = (embeddedHeadings && embeddedHeadings[h.heading]) || []
     const hpart = destructEmbHC(h);
-    const hpartlevel= find(hc=> hc.heading === hpart, hs)?.level || -1;
-    const eheadings= pipe(
-      dropWhile<HeadingCache>(hc => hpartlevel !== -1 && hc.heading !== hpart),
-      takeWhile(hc  => hc.heading === hpart || hc.level > hpartlevel) ,
-      filter(hc => hc.level > 1),
-      map(tweakOffset(h.level))
-   )(hs) 
+    const hpartlevel = hs.find((hc: HeadingCache) => hc.heading === hpart)?.level || -1;
+    // Process embedded headings: drop initial headings that don't match the part or are below the part level,
+    // then take headings while they match the part or are deeper, filter out level 1, and adjust levels
+    const eheadings = hs
+      // Drop headings until finding the matching part or if no match level
+      .dropWhile((hc: HeadingCache) => hpartlevel !== -1 && hc.heading !== hpart)
+      // Take headings that match the part or are deeper than the part level
+      .takeWhile((hc: HeadingCache) => hc.heading === hpart || hc.level > hpartlevel)
+      // Exclude top-level headings (level 1)
+      .filter((hc: HeadingCache) => hc.level > 1)
+      // Adjust heading levels relative to the parent heading's level
+      .map(tweakOffset(h.level));
     return [h, ...eheadings];
   };
-
-  const headings = headings_.flatMap(insertHeadings);
+  const headings =  headings_?.flatMap(insertHeadings) || [];
   return { headings };
 }
 
@@ -119,7 +115,7 @@ function buildMarkdownText(headings: Heading[], options: TableOptions): string {
 }
 
 function headerString(depth:number, options: TableOptions){
-  return ([hs, indent_] :StringsNum, heading: Heading): StringsNum => {
+  return ([hs, indent_] :[string[], number], heading: Heading): [string[], number] => {
     const itemIndication = getIndicator(heading, depth, options);
     const { whiteSpace, indent } = calculateIndent(heading, depth, indent_ , options);
 

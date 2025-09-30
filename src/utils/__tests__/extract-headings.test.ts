@@ -1,6 +1,6 @@
 import { CachedMetadata,HeadingCache } from "obsidian";
-import { TableOptions } from "src/types";
-import { extractHeadings, mergeHeadings, EmbeddedHeadings } from "../extract-headings";
+import { TableOptions, EmbeddedHeadings } from "src/types";
+import { extractHeadings, mergeHeadings } from "../extract-headings";
 
 jest.mock('obsidian');
 

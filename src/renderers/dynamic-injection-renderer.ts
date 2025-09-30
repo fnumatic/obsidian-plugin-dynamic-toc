@@ -1,7 +1,7 @@
 import { App, MarkdownRenderChild, MarkdownRenderer, TFile } from "obsidian";
 import { CLASS_TOC, SELECTOR_TOC } from "src/constants";
 import { DynamicTOCSettings } from "../types";
-import { extractHeadings, embeddedHeadings, mergeHeadings } from "../utils/extract-headings";
+import { extractHeadings, getEmbeddedHeadings, mergeHeadings } from "../utils/extract-headings";
 
 export class DynamicInjectionRenderer extends MarkdownRenderChild {
   constructor(
@@ -45,7 +45,7 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
   async render() {
     const fileMetaData = this.app.metadataCache.getCache(this.filePath)
     const { headings, embeds } = fileMetaData;
-    const embbedHeadings = embeddedHeadings(this.app.metadataCache, embeds)
+    const embbedHeadings = getEmbeddedHeadings(this.app.metadataCache, embeds)
     
   //if (not embeds parsing allowed in options ) return fileMetaData;
     const mergedMetaData = this.settings.embeddedHeadings && embbedHeadings 
