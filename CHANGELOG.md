@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.0.38](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.37...0.0.38) (2025-10-02)
+
+
+### Bug Fixes
+
+* **build:** include styles.css in dist and update release config ([dbf3a99](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/dbf3a99b68df181d2ecf57f37a6fa0f8cdd415b1))
+* **ci:** update release workflow for correct paths and modern actions ([f550923](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/f55092359c1f3a74e6b99fdaebf24fdb5b13a9f0))
+* css class on display block toc ([609a745](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/609a745383281f8b30f7bb243679b187475d914f))
+
 ## [0.0.37](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.36...0.0.37) (2024-2-7)
 
 
