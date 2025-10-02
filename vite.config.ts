@@ -12,7 +12,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),
       formats: ['cjs'],
-      fileName: 'main'
+      fileName: 'main',
+      cssFileName: 'styles'
     },
     rollupOptions: {
       external: [
@@ -46,7 +47,7 @@ export default defineConfig({
       ]
     },
     target: 'node14',
-    sourcemap: true,
+    sourcemap: false,
     emptyOutDir: true
   },
   css: {

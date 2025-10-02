@@ -10,7 +10,7 @@
   "github": {
     "release": true,
     "releaseName": "${version}",
-    "preRelease": true,
+    "preRelease": false,
     "assets": "dist/*",
     "autoGenerate": true
   },

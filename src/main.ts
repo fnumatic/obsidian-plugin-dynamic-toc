@@ -13,6 +13,7 @@ import {
 import { DynamicInjectionRenderer } from "./renderers/dynamic-injection-renderer";
 import { InsertCommandModal } from "./insert-command.modal";
 import {tocField} from "./extension/field"
+import "./styles.css";
 
 export default class DynamicTOCPlugin extends Plugin {
   settings: DynamicTOCSettings;
