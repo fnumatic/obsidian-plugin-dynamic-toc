@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.39](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.38...0.0.39) (2025-10-04)
+
+
+### Bug Fixes
+
+* **ci:** include changelog in release description ([5aded5e](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/5aded5e402c19c73e186ea186e2d60fbc4baeb22))
+* enable source map loading in devtools ([a4a9cb1](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/a4a9cb1bc3c1fd4eaf50fd13dd4ae922bf1d9915))
+* prevent memory leak in inline TOC with embedded content ([da29734](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/da297340dc1f6d57f381eafcfd8d46292862597e))
+* resolve undefined app reference in inline TOC callback ([120f3b1](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/120f3b1bb4dd2b014d96cfbe9890ca973a3f5722))
+* **types:** fix type errors in insert command modal ([24648c1](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/24648c151af40bbdcfe27dd4927ce76c17a3d986))
+
+
+### Features
+
+* **dev:** enable source map copying to vault in dev mode ([af39f53](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/af39f53892928b8bc6ae8c85af6f68721bbf2ba4))
+
 ## [0.0.38](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.37...0.0.38) (2025-10-02)
 
 
