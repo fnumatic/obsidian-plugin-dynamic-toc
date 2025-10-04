@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.40](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.39...0.0.40) (2025-10-04)
+
+
+### Bug Fixes
+
+* **ci:** fix yaml syntax error in release workflow ([31a7411](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/31a7411c5d5cb34f20e1f0d88dd451da89af977c))
+
 ## [0.0.39](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.38...0.0.39) (2025-10-04)
 
 
