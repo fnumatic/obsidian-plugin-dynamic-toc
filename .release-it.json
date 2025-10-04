@@ -7,27 +7,28 @@
       "requireCommits": false,
       "requireCleanWorkingDir": false
   },
-  "github": {
-    "release": true,
-    "releaseName": "${version}",
-    "preRelease": false,
-    "assets": "dist/*",
-    "autoGenerate": true
-  },
+    "github": {
+      "release": true,
+      "releaseName": "${version}",
+      "preRelease": false,
+      "assets": "dist/*",
+      "autoGenerate": true
+    },
+     "increment": "prompt",
   "npm": {
     "publish": false
   },
-  "plugins": {
-    "@release-it/conventional-changelog": {
-      "preset": {
-        "name": "angular"
-      },
-      "header": "# Changelog",
-      "infile": "CHANGELOG.md",
-      "ignoreRecommendedBump": true
-    },
-    "./scripts/ob-bumper.mjs": {
-      "indent": 2
-    }
-  }
+     "plugins": {
+       "@release-it/conventional-changelog": {
+         "preset": {
+           "name": "angular"
+         },
+         "header": "# Changelog",
+         "infile": "CHANGELOG.md",
+         "ignoreRecommendedBump": true
+       },
+     "./scripts/ob-bumper.mjs": {
+       "indent": 2
+     }
+   }
 }
