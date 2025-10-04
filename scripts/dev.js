@@ -32,12 +32,13 @@ async function main() {
       configFile: path.join(__dirname, '..', 'vite.config.ts'),
       mode: 'development',
       build: {
-        watch: {}
+        watch: {},
+        sourcemap: true
       },
       plugins: [
         {
           name: 'copy-to-vault',
-          buildEnd() {
+          writeBundle() {
             copyPluginToVault(vaultPath, pluginName)
           }
         }

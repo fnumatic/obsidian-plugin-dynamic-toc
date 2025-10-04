@@ -74,17 +74,22 @@ function copyPluginToVault(vaultPath, pluginName) {
   }
 
   // Files to copy
-  const filesToCopy = ['manifest.json', 'main.js']
+  const filesToCopy = ['manifest.json', 'main.js', 'main.js.map']
 
   filesToCopy.forEach(file => {
-    const srcPath = path.join(distDir, file)
+    let srcPath
+    if (file === 'manifest.json') {
+      srcPath = path.join(__dirname, '..', 'manifest.json')
+    } else {
+      srcPath = path.join(distDir, file)
+    }
     const destPath = path.join(pluginDir, file)
 
     if (fs.existsSync(srcPath)) {
       fs.copyFileSync(srcPath, destPath)
       console.log(`Copied ${file} to ${destPath}`)
     } else {
-      console.log(`Warning: ${file} not found in dist directory`)
+      console.log(`Warning: ${file} not found`)
     }
   })
 

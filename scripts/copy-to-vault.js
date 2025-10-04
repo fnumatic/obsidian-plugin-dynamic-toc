@@ -29,11 +29,11 @@ async function main() {
     console.log(`✅ Using saved vault: ${selectedVault}`)
   }
 
-  try {
-    copyPluginToVault(selectedVault)
-    console.log('✅ Plugin successfully copied!')
-    console.log('🔄 You can now reload the plugin in Obsidian (Settings → Community plugins → Reload plugins)')
-  } catch (error) {
+   try {
+     copyPluginToVault(selectedVault, pluginName)
+     console.log('✅ Plugin successfully copied!')
+     console.log('🔄 You can now reload the plugin in Obsidian (Settings → Community plugins → Reload plugins)')
+   } catch (error) {
     console.error('❌ Error copying plugin:', error.message)
     process.exit(1)
   }
