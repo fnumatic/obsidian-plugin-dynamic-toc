@@ -22,7 +22,7 @@ export const tocField= (app: App,settings: DynamicTOCSettings) =>{
   
   create:(state:EditorState) => renderInline(app, state, state.selection ,settings) ?? Decoration.none,
 
-  update(oldState: DecorationSet, tr: Transaction): DecorationSet {
+  update(_oldState: DecorationSet, tr: Transaction): DecorationSet {
     if(! tr.state.field(editorLivePreviewField)) return Decoration.none
     return renderInline(app, tr.state, tr.selection, settings) ?? Decoration.none 
   },
@@ -46,7 +46,7 @@ function renderInline(app: App, state: EditorState, selection:EditorSelection, s
 	        const fileMetaData = app.metadataCache.getCache(currentFile.path)
           
           const { headings, embeds } = fileMetaData;
-          const embbedHeadings = getEmbeddedHeadings(this.app.metadataCache, embeds)
+          const embbedHeadings = getEmbeddedHeadings(app.metadataCache, embeds)
           
           const mergedMetaData = settings.embeddedHeadings && embbedHeadings 
             ? mergeHeadings(headings, embbedHeadings ) 
