@@ -1,6 +1,6 @@
 import { EditorView, WidgetType } from "@codemirror/view";
 import { EditorSelection } from "@codemirror/state";
-import { App, MarkdownRenderer, setIcon } from "obsidian";
+import { App, MarkdownRenderer, MarkdownRenderChild, setIcon } from "obsidian";
 
 
 export class TocWidget extends WidgetType {
@@ -26,11 +26,12 @@ export class TocWidget extends WidgetType {
     }
     );
     return createDiv({
-        cls: ["cm-preview-code-block", "cm-embed-block", "markdown-rendered"] 
+        cls: ["cm-preview-code-block", "cm-embed-block", "markdown-rendered"]
     },
     (el) =>{
         el.appendChild(div3)
-        MarkdownRenderer.render(this.app, this.data,el,this.path,null)
+        const child = new MarkdownRenderChild(el);
+        MarkdownRenderer.render(this.app, this.data, el, this.path, child)
     });
   }
 }
