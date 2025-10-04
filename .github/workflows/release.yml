@@ -22,18 +22,35 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: latest
-      - name: Build
-        run: |
-          pnpm install
-          pnpm build
-          mkdir ${{ env.PLUGIN_NAME }}
-          cp dist/main.js dist/manifest.json dist/styles.css ${{ env.PLUGIN_NAME }}
-          zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ${{ env.PLUGIN_NAME }}.zip
-            dist/main.js
-            dist/styles.css
-            dist/manifest.json
+       - name: Build
+         run: |
+           pnpm install
+           pnpm build
+           mkdir ${{ env.PLUGIN_NAME }}
+           cp dist/main.js dist/manifest.json dist/styles.css ${{ env.PLUGIN_NAME }}
+           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
+       - name: Extract Changelog
+         id: changelog
+         run: |
+           # Extract the changelog for the current tag (remove 'v' prefix if present)
+           TAG_NAME=${GITHUB_REF_NAME#v}
+           # Extract the changelog section for this version
+           CHANGELOG_BODY=$(awk "/^## \[$TAG_NAME\]/ {flag=1; next} flag && /^## \[/ {exit} flag {print}" CHANGELOG.md)
+           if [ -n "$CHANGELOG_BODY" ]; then
+             # Escape newlines for GitHub Actions output
+             CHANGELOG_BODY="${CHANGELOG_BODY//'%'/'%25'}"
+             CHANGELOG_BODY="${CHANGELOG_BODY//$'\n'/'%0A'}"
+             CHANGELOG_BODY="${CHANGELOG_BODY//$'\r'/'%0D'}"
+             echo "body=$CHANGELOG_BODY" >> $GITHUB_OUTPUT
+           else
+             echo "body=No changelog found for version $TAG_NAME" >> $GITHUB_OUTPUT
+           fi
+       - name: Release
+         uses: softprops/action-gh-release@v1
+         with:
+           body: ${{ steps.changelog.outputs.body }}
+           files: |
+             ${{ env.PLUGIN_NAME }}.zip
+             dist/main.js
+             dist/styles.css
+             dist/manifest.json
