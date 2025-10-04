@@ -28,13 +28,13 @@ async function main() {
   console.log(`Starting dev server with vault: ${vaultPath}`)
 
   try {
-    await build({
-      configFile: path.join(__dirname, '..', 'vite.config.ts'),
-      mode: 'development',
-      build: {
-        watch: {},
-        sourcemap: true
-      },
+     await build({
+       configFile: path.join(__dirname, '..', 'vite.config.ts'),
+       mode: 'development',
+       build: {
+         watch: {},
+         sourcemap: 'inline'
+       },
       plugins: [
         {
           name: 'copy-to-vault',

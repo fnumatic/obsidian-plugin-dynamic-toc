@@ -74,7 +74,7 @@ function copyPluginToVault(vaultPath, pluginName) {
   }
 
   // Files to copy
-  const filesToCopy = ['manifest.json', 'main.js', 'main.js.map']
+  const filesToCopy = ['manifest.json', 'main.js']
 
   filesToCopy.forEach(file => {
     let srcPath
