@@ -1,0 +1,19 @@
+{
+  "ref": "refs/tags/v1.0.0",
+  "before": "0000000000000000000000000000000000000000",
+  "after": "70e9f073c65690abdfdb103603e0635e4c40030b",
+  "repository": {
+    "name": "obsidian-dynamic-toc",
+    "full_name": "sst/obsidian-dynamic-toc",
+    "owner": {
+      "name": "sst"
+    }
+  },
+  "pusher": {
+    "name": "testuser",
+    "email": "test@example.com"
+  },
+  "head_commit": {
+    "id": "70e9f073c65690abdfdb103603e0635e4c40030b"
+  }
+}

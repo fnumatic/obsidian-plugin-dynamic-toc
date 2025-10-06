@@ -10,5 +10,6 @@ main.js
 styles.css
 .hotreload
 archive/
+bin/
 
 .vault

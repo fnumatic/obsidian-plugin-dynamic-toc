@@ -12,7 +12,8 @@
     "release": "release-it",
     "release:dry": "release-it --dry-run",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "validate-workflow": "./bin/act push --eventpath push_event.json -P ubuntu-latest=catthehacker/ubuntu:act-latest"
   },
   "devDependencies": {
     "@codemirror/language": "^6.11.3",
