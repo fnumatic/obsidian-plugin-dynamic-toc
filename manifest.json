@@ -4,6 +4,6 @@
   "author": "fnumatic",
   "description": "An Obsidian plugin to generate Tables of Contents that stay up to date with your document outline.",
   "minAppVersion": "1.1.0",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "repo": "fnumatic/obsidian-plugin-dynamic-toc"
 }
