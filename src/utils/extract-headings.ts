@@ -43,6 +43,7 @@ export function getEmbeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCa
 }
 
 function destructEmbHC({ heading }: HeadingCache) {
+  if (!heading) return ''
   if (!heading.startsWith("!")) return heading
   const inner = heading
     .split(/\!\[\[(.*?)\]\]/)
@@ -78,10 +79,11 @@ function tweakOffset(offset: number)  {
   return (h: HeadingCache) => ({ ...h, level: h.level + offset - 1 });
 }
 
-function linkToCachedMetadata(link:string, metadataCache: MetadataCache) {
+function linkToCachedMetadata(link:string, metadataCache: MetadataCache): CachedMetadata {
   const {path,subpath}= parseLinktext(link)
   const f = metadataCache.getFirstLinkpathDest(path,subpath)
-  return metadataCache.getCache(f.path)
+  const cache = f && metadataCache.getCache(f.path)
+  return cache ? { ...cache, headings: cache.headings.filter(h => h && h.heading) } : { headings: [] }
 }
 
 function getIndicator(

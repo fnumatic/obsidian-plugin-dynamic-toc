@@ -18,6 +18,8 @@ import "./styles.css";
 export default class DynamicTOCPlugin extends Plugin {
   settings: DynamicTOCSettings;
   onload = async () => {
+    console.log("Dynamic TOC Plugin: Version 0.0.41 initialized");
+
     await this.loadSettings();
     this.addSettingTab(new DynamicTOCSettingsTab(this.app, this));
     this.addCommand({
