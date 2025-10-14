@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "node scripts/dev.js",
+    "dev:default": "node scripts/dev-default.js",
     "preview": "node scripts/copy-to-vault.js",
     "type-check": "tsc --noEmit",
     "build": "vite build && cp manifest.json dist/",

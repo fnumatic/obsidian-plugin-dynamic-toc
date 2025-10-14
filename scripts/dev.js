@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 const { build } = require('vite')
-const { findObsidianVaults, loadVaultPath, saveVaultPath, promptUser, copyPluginToVault } = require('./utils')
+const { findObsidianVaults, loadVaultPath, saveVaultPath, promptUser, copyPluginToVault, ensureHotReloadFile } = require('./utils')
 
 // Get plugin name from package.json
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
@@ -21,11 +21,14 @@ async function main() {
 
   console.log(`✅ Found ${vaults.length} vault(s):`)
 
-  const formerVault = loadVaultPath()
-  const vaultPath = await promptUser('Select a vault to copy the plugin to:', vaults, formerVault)
-  saveVaultPath(vaultPath)
+   const formerVault = loadVaultPath()
+   const vaultPath = await promptUser('Select a vault to copy the plugin to:', vaults, formerVault)
+   saveVaultPath(vaultPath)
 
-  console.log(`Starting dev server with vault: ${vaultPath}`)
+   // Ensure hot reload file exists
+   ensureHotReloadFile(vaultPath, pluginName)
+
+   console.log(`Starting dev server with vault: ${vaultPath}`)
 
   try {
      await build({

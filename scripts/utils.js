@@ -64,6 +64,21 @@ function promptUser(question, options, formerVault = null) {
   })
 }
 
+function ensureHotReloadFile(vaultPath, pluginName) {
+  const pluginDir = path.join(vaultPath, '.obsidian', 'plugins', pluginName)
+  const hotReloadPath = path.join(pluginDir, '.hotreload')
+
+  // Create plugin directory if it doesn't exist
+  if (!fs.existsSync(pluginDir)) {
+    fs.mkdirSync(pluginDir, { recursive: true })
+  }
+
+  if (!fs.existsSync(hotReloadPath)) {
+    fs.writeFileSync(hotReloadPath, '')
+    console.log('Created .hotreload file for hot reload support')
+  }
+}
+
 function copyPluginToVault(vaultPath, pluginName) {
   const pluginDir = path.join(vaultPath, '.obsidian', 'plugins', pluginName)
   const distDir = path.join(__dirname, '..', 'dist')
@@ -101,6 +116,9 @@ function copyPluginToVault(vaultPath, pluginName) {
     console.log(`Copied styles.css to ${stylesDest}`)
   }
 
+  // Ensure hot reload file exists
+  ensureHotReloadFile(vaultPath, pluginName)
+
   console.log(`Plugin "${pluginName}" copied to vault: ${vaultPath}`)
 }
 
@@ -109,5 +127,6 @@ module.exports = {
   loadVaultPath,
   saveVaultPath,
   promptUser,
-  copyPluginToVault
+  copyPluginToVault,
+  ensureHotReloadFile
 }
