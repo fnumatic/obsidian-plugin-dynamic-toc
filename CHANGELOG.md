@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.42](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.41...0.0.42) (2025-10-14)
+
+
+### Bug Fixes
+
+* **toc:** fix TypeError when embedding non-existent files in TOC Closes [#9](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/issues/9) ([316060c](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/316060c8f10c94675943e0a94d126b454f9eebf1))
+
+
+### Features
+
+* **chore:** add enhanced build management with hot reload support ([2873be4](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/2873be4b3814b7962108710291ce7b4478d0d831))
+
 ## [0.0.41](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.40...0.0.41) (2025-10-06)
 
 
