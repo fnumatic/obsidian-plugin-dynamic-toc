@@ -83,7 +83,7 @@ function linkToCachedMetadata(link:string, metadataCache: MetadataCache): Cached
   const {path,subpath}= parseLinktext(link)
   const f = metadataCache.getFirstLinkpathDest(path,subpath)
   const cache = f && metadataCache.getCache(f.path)
-  return cache ? { ...cache, headings: cache.headings.filter(h => h && h.heading) } : { headings: [] }
+  return cache ? { ...cache, headings: (cache.headings || []).filter(h => h && h.heading) } : { headings: [] }
 }
 
 function getIndicator(
