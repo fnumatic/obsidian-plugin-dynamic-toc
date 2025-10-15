@@ -3,10 +3,13 @@ import { Heading } from "../models/heading";
 import { TableOptions, EmbeddedHeadings } from "../types";
 import "./util";
 
+type TocAccumulator = [string[], number];
+type IndentConfig = { indent: number; whiteSpace: string };
+
 export function extractHeadings(
   fileMetaData: CachedMetadata,
   options: TableOptions
-) {
+): string {
   const { headings } = fileMetaData || {};
 
   const processableHeadings = (headings || [])
@@ -16,13 +19,13 @@ export function extractHeadings(
   return buildMarkdown(processableHeadings,options);
 }
 
-function buildMarkdown(headings:Heading[], options: TableOptions){
+function buildMarkdown(headings:Heading[], options: TableOptions): string {
   return  (!headings.length)           ? ""
         : (options.style === "inline") ? buildInlineMarkdownText(headings, options)
         :                                buildMarkdownText(headings, options);
 }
 
-function isProcessable (options:TableOptions){
+function isProcessable (options:TableOptions): (h: HeadingCache) => boolean {
   return (h: HeadingCache) => 
             !!h 
             && h.level >= options.min_depth 
@@ -42,7 +45,7 @@ export function getEmbeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCa
     .reduce(grabEmbeddedHeadings,{} ) ;
 }
 
-function destructEmbHC({ heading }: HeadingCache) {
+function destructEmbHC({ heading }: HeadingCache): string {
   if (!heading) return ''
   if (!heading.startsWith("!")) return heading
   const inner = heading
@@ -75,7 +78,7 @@ export function mergeHeadings(headings_:HeadingCache[] | undefined, embeddedHead
   return { headings };
 }
 
-function tweakOffset(offset: number)  {
+function tweakOffset(offset: number): (h: HeadingCache) => HeadingCache {
   return (h: HeadingCache) => ({ ...h, level: h.level + offset - 1 });
 }
 
@@ -90,7 +93,7 @@ function getIndicator(
   heading: Heading,
   firstLevel: number,
   options: TableOptions
-) {
+): string {
   const defaultIndicator = options.style === "number" ? "1." : "-";
   const reversedIndicator = options.style === "number" ? "-" : "1.";
 
@@ -116,8 +119,8 @@ function buildMarkdownText(headings: Heading[], options: TableOptions): string {
   
 }
 
-function headerString(depth:number, options: TableOptions){
-  return ([hs, indent_] :[string[], number], heading: Heading): [string[], number] => {
+function headerString(depth:number, options: TableOptions): (acc: TocAccumulator, heading: Heading) => TocAccumulator {
+  return ([hs, indent_] :TocAccumulator, heading: Heading): TocAccumulator => {
     const itemIndication = getIndicator(heading, depth, options);
     const { whiteSpace, indent } = calculateIndent(heading, depth, indent_ , options);
 
@@ -126,7 +129,7 @@ function headerString(depth:number, options: TableOptions){
   }
 }
 
-function calculateIndent(heading: Heading, firstHeadingDepth: number, indent_: number, options: TableOptions) {
+function calculateIndent(heading: Heading, firstHeadingDepth: number, indent_: number, options: TableOptions): IndentConfig {
   const a_i_h = options.allow_inconsistent_headings;
 
   const l = Math.max(0, heading.level - firstHeadingDepth);
@@ -143,7 +146,7 @@ function calculateIndent(heading: Heading, firstHeadingDepth: number, indent_: n
  * @param options - Code block options
  * @returns
  */
-function buildInlineMarkdownText(headings: Heading[], options: TableOptions) {
+function buildInlineMarkdownText(headings: Heading[], options: TableOptions): string {
   const levels = headings.map(h => h.level);
   const highestDepth = Math.min(...levels);
   const delimiter = options.delimiter || "|";
