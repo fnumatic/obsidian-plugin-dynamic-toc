@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.43](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.42...0.0.43) (2025-10-15)
+
+
+### Bug Fixes
+
+* **extract-headings:** prevent TypeError when embedding images in headings Closes [#10](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/issues/10) ([f8a09e7](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/f8a09e752c03c3b141cdff2c1ebcf4b9579e2dfc))
+
 ## [0.0.42](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.41...0.0.42) (2025-10-14)
 
 
