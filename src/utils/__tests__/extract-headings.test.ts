@@ -1,8 +1,9 @@
 /// <reference types="vitest/globals" />
 
-import type { CachedMetadata, HeadingCache } from "obsidian";
+import { vi } from "vitest";
+import type { CachedMetadata, HeadingCache, MetadataCache } from "obsidian";
 import { TableOptions, EmbeddedHeadings } from "src/types";
-import { extractHeadings, mergeHeadings } from "../extract-headings";
+import { extractHeadings, mergeHeadings, getEmbeddedHeadings } from "../extract-headings";
 
 describe("Extract headings", () => {
   describe("build markdown text", () => {
@@ -243,6 +244,113 @@ describe("Extract embedded headings 2", () => {
         style: "bullet",
       } as TableOptions;
       expect(extractHeadings(mergeHeadings(defaultHeadings,embeddedHeadings), options)).toMatchSnapshot();
+    });
+  });
+})
+
+describe("Null reference fixes", () => {
+  describe("getEmbeddedHeadings - linkToCachedMetadata null safety", () => {
+    it("should handle non-existent embedded files gracefully (linkToCachedMetadata returns empty headings)", () => {
+      const mockMetadataCache = {
+        getFirstLinkpathDest: vi.fn().mockReturnValue(null),
+        getCache: vi.fn(),
+      } as unknown as MetadataCache;
+
+      const embeds = [
+        { link: "nonexistent.md", original: "![[nonexistent.md]]", position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }
+      ] as any;
+
+      const result = getEmbeddedHeadings(mockMetadataCache, embeds);
+
+      expect(result).toEqual({
+        "![[nonexistent.md]]": []
+      });
+      expect(mockMetadataCache.getFirstLinkpathDest).toHaveBeenCalledWith("nonexistent.md", undefined);
+      expect(mockMetadataCache.getCache).not.toHaveBeenCalled();
+    });
+
+    it("should handle undefined/null cache.headings in embedded files gracefully", () => {
+      const mockMetadataCache = {
+        getFirstLinkpathDest: vi.fn().mockReturnValue({ path: "test.md" }),
+        getCache: vi.fn().mockReturnValue({ headings: null }),
+      } as unknown as MetadataCache;
+
+      const embeds = [
+        { link: "test.md", original: "![[test.md]]", position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }
+      ] as any;
+
+      const result = getEmbeddedHeadings(mockMetadataCache, embeds);
+
+      expect(result).toEqual({
+        "![[test.md]]": []
+      });
+    });
+
+    it("should filter out invalid headings in embedded files (null or missing heading property)", () => {
+      const mockMetadataCache = {
+        getFirstLinkpathDest: vi.fn().mockReturnValue({ path: "test.md" }),
+        getCache: vi.fn().mockReturnValue({
+          headings: [
+            { heading: "valid", level: 1, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } },
+            null,
+            { level: 2, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }, // missing heading property
+            { heading: "another valid", level: 3, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } },
+          ]
+        }),
+      } as unknown as MetadataCache;
+
+      const embeds = [
+        { link: "test.md", original: "![[test.md]]", position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }
+      ] as any;
+
+      const result = getEmbeddedHeadings(mockMetadataCache, embeds);
+
+      expect(result).toEqual({
+        "![[test.md]]": [
+          { heading: "valid", level: 1, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } },
+          { heading: "another valid", level: 3, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } },
+        ]
+      });
+    });
+
+    it("should return undefined when embeds is null", () => {
+      const mockMetadataCache = {} as MetadataCache;
+
+      const result = getEmbeddedHeadings(mockMetadataCache, null);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe("mergeHeadings - destructEmbHC null safety", () => {
+    it("should not throw TypeError when processing headings with null values", () => {
+      const headings = [
+        { heading: "![[test.md]]", level: 1, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }
+      ];
+
+      const embeddedHeadings = {
+        "![[test.md]]": [
+          { heading: null as any, level: 2, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }
+        ]
+      };
+
+      // The key test is that this doesn't throw a TypeError
+      expect(() => mergeHeadings(headings, embeddedHeadings)).not.toThrow();
+    });
+
+    it("should not throw TypeError when processing headings with undefined values", () => {
+      const headings = [
+        { heading: "![[test.md]]", level: 1, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }
+      ];
+
+      const embeddedHeadings = {
+        "![[test.md]]": [
+          { heading: undefined as any, level: 2, position: { start: { line: 0, col: 0, offset: 0 }, end: { line: 0, col: 0, offset: 0 } } }
+        ]
+      };
+
+      // The key test is that this doesn't throw a TypeError
+      expect(() => mergeHeadings(headings, embeddedHeadings)).not.toThrow();
     });
   });
 })
