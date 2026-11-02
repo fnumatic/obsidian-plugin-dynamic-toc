@@ -76,4 +76,49 @@ describe("Heading Model", () => {
       });
     })
   });
+
+  describe("Markdown link headings", () => {
+    const markdownHrefFor = (heading: string) =>
+      new Heading({ heading, level: 1 } as HeadingCache).markdownHref;
+
+    it("uses the link text when the heading is only a markdown link", () => {
+      expect(markdownHrefFor("[Hruna](https://example.com)")).toBe("[[#Hruna]]");
+    });
+
+    it("ignores an anchor inside the markdown link target", () => {
+      expect(
+        markdownHrefFor("[Hruna](https://5e.tools/adventure.html#idrotf,3)")
+      ).toBe("[[#Hruna]]");
+    });
+
+    it("keeps text that follows a markdown link", () => {
+      expect(
+        markdownHrefFor("[Hruna](https://example.com)'s Missing Sled")
+      ).toBe("[[#Hruna's Missing Sled]]");
+    });
+
+    it("keeps text around a markdown link in the middle", () => {
+      expect(markdownHrefFor("foo [bar](https://example.com) baz")).toBe(
+        "[[#foo bar baz]]"
+      );
+    });
+  });
+
+  describe("Wikilink headings with surrounding text", () => {
+    const markdownHrefFor = (heading: string) =>
+      new Heading({ heading, level: 1 } as HeadingCache).markdownHref;
+
+    // Issue #1: a heading that begins with a wikilink lost its section link.
+    it("keeps text after a wikilink", () => {
+      expect(markdownHrefFor("[[Hruna]]'s Missing Sled")).toBe(
+        "[[#Hruna's Missing Sled]]"
+      );
+    });
+
+    it("uses the alias of a wikilink followed by text", () => {
+      expect(markdownHrefFor("[[Hruna|Alias]]'s Missing Sled")).toBe(
+        "[[#Alias's Missing Sled]]"
+      );
+    });
+  });
 });

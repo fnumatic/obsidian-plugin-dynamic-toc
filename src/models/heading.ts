@@ -23,7 +23,7 @@ export class Heading {
     return `#${rmPipe(value)}`;
   }
   get markdownHref(): string | null {
-    if (!this.isLink) return hd(rmBrckt(this.rawHeading));
+    if (!this.isLink) return hd(linkDisplayText(this.rawHeading));
     const value = parseMarkdownLink(this.rawHeading);
     if (!hasAlias(value)) return hd(value);
 
@@ -39,6 +39,8 @@ export class Heading {
 
 const linkReg = /^\!?\[\[(.*?)\]\]$/;
 const manylinkReg = /\]\](.*?)\[\[/;
+const mdLinkReg = /!?\[([^\]]*)\]\([^)]*\)/g;
+const wikiLinkReg = /!?\[\[([^\]]*)\]\]/g;
 
 function hd(txt:string){
   return `[[#${txt}]]`
@@ -49,10 +51,10 @@ function parseMarkdownLink(link: string): string {
   return base;
 }
 
-function rmBrckt(s: string) {
+function linkDisplayText(s: string): string {
   return s
-    .replace(/\[\[/g, '')
-    .replace(/\]\]/g, '');
+    .replace(mdLinkReg, "$1")
+    .replace(wikiLinkReg, (_match, inner: string) => inner.split("|")[1] ?? inner);
 }
 
 function rmPipe(s: string){
