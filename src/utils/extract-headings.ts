@@ -32,7 +32,7 @@ function isProcessable (options:TableOptions): (h: HeadingCache) => boolean {
             && h.level <= options.max_depth
 }
 
-export function getEmbeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache[]) : EmbeddedHeadings | undefined {
+export function getEmbeddedHeadings(metadataCache: MetadataCache, embeds:EmbedCache[] | null | undefined) : EmbeddedHeadings | undefined {
   if (!embeds) return undefined
   
   const grabEmbeddedHeadings = (agg:{}, e:EmbedCache) => {

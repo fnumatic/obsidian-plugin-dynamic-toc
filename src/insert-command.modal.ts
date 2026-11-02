@@ -21,7 +21,7 @@ const options: OptionsCollection = {
 };
 export class InsertCommandModal extends FuzzySuggestModal<keyof OptionsCollection> {
   private plugin: DynamicTOCPlugin;
-  callback: (item: string) => void;
+  callback!: (item: string) => void;
   constructor(app: App, plugin: DynamicTOCPlugin) {
     super(app);
     this.app = app;

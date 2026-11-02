@@ -16,7 +16,7 @@ import {tocField} from "./extension/field"
 import "./styles.css";
 
 export default class DynamicTOCPlugin extends Plugin {
-  settings: DynamicTOCSettings;
+  settings!: DynamicTOCSettings;
   onload = async () => {
     console.log("Dynamic TOC Plugin: Version 0.0.43 initialized");
 

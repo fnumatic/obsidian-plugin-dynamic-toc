@@ -15,7 +15,6 @@ export default defineConfig({
       fileName: () => 'main.js',
       cssFileName: 'styles'
     },
-    minify: 'esbuild',
     rollupOptions: {
       external: [
         'obsidian',

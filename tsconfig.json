@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "module": "ESNext",
     "target": "es6",
     "moduleResolution": "bundler",
+    "paths": {
+      "*": [
+        "./*"
+      ]
+    },
     "lib": [
       "dom",
       "es2019"

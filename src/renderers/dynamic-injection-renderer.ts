@@ -44,6 +44,7 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
 
   async render() {
     const fileMetaData = this.app.metadataCache.getCache(this.filePath)
+    if (!fileMetaData) return
     const { headings, embeds } = fileMetaData;
     const embbedHeadings = getEmbeddedHeadings(this.app.metadataCache, embeds)
     
@@ -70,9 +71,9 @@ export class DynamicInjectionRenderer extends MarkdownRenderChild {
     const existing = this.containerEl.querySelector(SELECTOR_TOC);
     // We need to keep cleaning up after ourselves on settings or file changes
     if (existing) {
-      existing.parentNode.removeChild(existing);
+      existing.parentNode?.removeChild(existing);
     }
     // Attach the table to the parent of the match
-    this.match.parentNode.appendChild(newElement);
+    this.match.parentNode?.appendChild(newElement);
   }
 }

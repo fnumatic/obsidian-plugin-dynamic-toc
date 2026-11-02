@@ -39,9 +39,9 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
     );
   }
 
-  onActiveLeafChangeHandler = (_: WorkspaceLeaf) => {
-   const vstate=_.getViewState()
-   if (vstate.state?.mode==="source" && ! vstate.state?.source) {
+  onActiveLeafChangeHandler = (_: WorkspaceLeaf | null) => {
+   const vstate=_?.getViewState()
+   if (vstate?.state?.mode==="source" && ! vstate.state?.source) {
     this.render();
    }
   };
@@ -61,6 +61,7 @@ export class CodeBlockRenderer extends MarkdownRenderChild {
     this.container.classList.add(...cls);
     
     const fileMetaData = this.app.metadataCache.getCache(this.filePath)
+    if (!fileMetaData) return
     const { headings, embeds } = fileMetaData;
     const embbedHeadings = getEmbeddedHeadings(this.app.metadataCache, embeds)
     

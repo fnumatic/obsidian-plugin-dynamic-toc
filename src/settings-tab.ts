@@ -34,7 +34,7 @@ export class DynamicTOCSettingsTab extends PluginSettingTab {
         "Varied style allows for the most top level heading to match your list style, then subsequent levels to be the opposite. For example if your list style is number, then your level 2 headings will be number, any levels lower then 2 will be bullet and vice versa."
       )
       .addToggle((cb) =>
-        cb.setValue(this.plugin.settings.varied_style).onChange(async (val) => {
+        cb.setValue(this.plugin.settings.varied_style ?? false).onChange(async (val) => {
           this.plugin.settings.varied_style = val;
           await this.plugin.saveSettings();
         })
@@ -48,7 +48,7 @@ export class DynamicTOCSettingsTab extends PluginSettingTab {
       .addText((text) =>
         text
           .setPlaceholder("e.g. -, *, ~")
-          .setValue(this.plugin.settings.delimiter)
+          .setValue(this.plugin.settings.delimiter ?? "")
           .onChange(async (val) => {
             this.plugin.settings.delimiter = val;
             this.plugin.saveSettings();
@@ -97,7 +97,7 @@ export class DynamicTOCSettingsTab extends PluginSettingTab {
       .addText((text) =>
         text
           .setPlaceholder("## Table of Contents")
-          .setValue(this.plugin.settings.title)
+          .setValue(this.plugin.settings.title ?? "")
           .onChange(async (val) => {
             this.plugin.settings.title = val;
             this.plugin.saveSettings();
@@ -111,18 +111,12 @@ export class DynamicTOCSettingsTab extends PluginSettingTab {
       .addDropdown((cb) =>
         cb
           .addOptions(
-            Object.keys(EXTERNAL_MARKDOWN_PREVIEW_STYLE).reduce(
-              (acc, curr: keyof typeof EXTERNAL_MARKDOWN_PREVIEW_STYLE) => {
-                const value = EXTERNAL_MARKDOWN_PREVIEW_STYLE[curr];
-                return { ...acc, [curr]: value };
-              },
-              {} as Record<string, string>
-            )
+            Object.fromEntries(Object.entries(EXTERNAL_MARKDOWN_PREVIEW_STYLE))
           )
           .setDisabled(this.plugin.settings.supportAllMatchers)
           .setValue(this.plugin.settings.externalStyle)
-          .onChange(async (val: ExternalMarkdownKey) => {
-            this.plugin.settings.externalStyle = val;
+          .onChange(async (val: string) => {
+            this.plugin.settings.externalStyle = val as ExternalMarkdownKey;
             await this.plugin.saveSettings();
           })
       );
