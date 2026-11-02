@@ -1,54 +1,122 @@
 name: Release obsidian plugin
 
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - "*" # Push events to matching any tag format, i.e. 1.0, 20.15.10
+  release:
+    types: [published]
+  workflow_run:
+    # release-please creates the release with GITHUB_TOKEN, and events produced
+    # with that token do not trigger other workflows; chain off its workflow
+    # run instead of the (never fired) `release` event.
+    workflows: ["Release Please"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to build and publish assets for
+        required: true
 
 env:
-  PLUGIN_NAME: obsidian-dynamic-toc # Change this to the name of your plugin-id folder
+  PLUGIN_NAME: obsidian-dynamic-toc # Plugin ID from manifest.json
+
+permissions:
+  contents: write
 
 jobs:
+  resolve-tag:
+    runs-on: ubuntu-latest
+    # Skip failed release-please runs; the build job also skips PR-only runs.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    outputs:
+      tag: ${{ steps.ref.outputs.tag }}
+      skip: ${{ steps.ref.outputs.skip }}
+    steps:
+      - name: Resolve tag
+        id: ref
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # No checkout in this job, so tell gh which repository to query.
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            # release-please also runs for pull-request-only updates, so use the
+            # newest release and skip when its assets are already attached.
+            TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName')
+            if [ -z "$TAG" ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "No release found yet; nothing to build."
+              exit 0
+            fi
+            if gh release view "$TAG" --json assets -q '.assets[].name' | grep -qx "${PLUGIN_NAME}.zip"; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "Assets for ${TAG} already exist; skipping."
+              exit 0
+            fi
+            echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ github.event.release.tag_name || github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: resolve-tag
+    if: needs.resolve-tag.result == 'success' && needs.resolve-tag.outputs.skip != 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
-          node-version: "22.x" # You might need to adjust this value to your own version
+          ref: ${{ needs.resolve-tag.outputs.tag }}
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v6
         with:
-          version: latest
+          version: "12"
+      - name: Use Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22.x"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check (types)
+        run: pnpm check
+      - name: Test
+        run: pnpm test
       - name: Build
         run: |
-          pnpm install
           pnpm build
-          mkdir ${{ env.PLUGIN_NAME }}
-          cp dist/main.js dist/manifest.json dist/styles.css ${{ env.PLUGIN_NAME }}
-           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-      - name: Extract Changelog
-        id: changelog
+          mkdir "$PLUGIN_NAME"
+          cp dist/main.js dist/manifest.json dist/styles.css "$PLUGIN_NAME"
+          zip -r "$PLUGIN_NAME.zip" "$PLUGIN_NAME"
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.resolve-tag.outputs.tag }}
         run: |
-           # Extract the changelog for the current tag (remove 'v' prefix if present)
-           TAG_NAME=${GITHUB_REF_NAME#v}
-           # Extract the changelog section for this version
-           CHANGELOG_BODY=$(awk "/^## \[$TAG_NAME\]/ {flag=1; next} flag && /^## \[/ {exit} flag {print}" CHANGELOG.md)
-           if [ -n "$CHANGELOG_BODY" ]; then
-             echo "body<<EOF" >> $GITHUB_OUTPUT
-             echo "$CHANGELOG_BODY" >> $GITHUB_OUTPUT
-             echo "EOF" >> $GITHUB_OUTPUT
-           else
-             echo "body=No changelog found for version $TAG_NAME" >> $GITHUB_OUTPUT
-           fi
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          body: ${{ steps.changelog.outputs.body }}
-          files: |
-            ${{ env.PLUGIN_NAME }}.zip
-            dist/main.js
-            dist/styles.css
-            dist/manifest.json
+          # release-please creates the release and its notes; only attach assets here
+          gh release upload "$TAG" \
+            "$PLUGIN_NAME.zip" \
+            dist/main.js \
+            dist/styles.css \
+            dist/manifest.json \
+            --clobber
+      - name: Sync versions.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.resolve-tag.outputs.tag }}
+        run: |
+          # release-please cannot add the dynamic "version -> minAppVersion" key
+          VERSION="${TAG#v}"
+          MIN_APP_VERSION=$(jq -r '.minAppVersion' manifest.json)
+          git fetch origin main
+          git checkout main
+          if jq -e --arg v "$VERSION" 'has($v)' versions.json > /dev/null; then
+            echo "versions.json already contains ${VERSION}"
+            exit 0
+          fi
+          jq --arg v "$VERSION" --arg m "$MIN_APP_VERSION" '. + {($v): $m}' versions.json > versions.json.tmp
+          mv versions.json.tmp versions.json
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add versions.json
+          git commit -m "chore(release): sync versions.json for ${VERSION} [skip ci]"
+          git push origin main

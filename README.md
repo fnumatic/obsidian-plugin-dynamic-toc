@@ -218,11 +218,8 @@ pnpm dev
 
 ### Releasing
 
-To start a release build run the following command:
-
-```bash
-pnpm release
-git push --follow-tags origin main
-```
+Releases are prepared by release-please from conventional commits on `main`.
+Merge the release PR it opens; the release workflow builds the tag and attaches
+the plugin assets. Details are in [release_instruction.md](release_instruction.md).
 
 ---
