@@ -5,16 +5,17 @@ import { builtinModules } from 'module'
 export default defineConfig({
   resolve: {
     alias: {
-      'src': resolve(__dirname, 'src')
+      'src': resolve(import.meta.dirname, 'src')
     }
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/main.ts'),
+      entry: resolve(import.meta.dirname, 'src/main.ts'),
       formats: ['cjs'],
-      fileName: 'main',
+      fileName: () => 'main.js',
       cssFileName: 'styles'
     },
+    minify: 'esbuild',
     rollupOptions: {
       external: [
         'obsidian',
@@ -44,9 +45,13 @@ export default defineConfig({
         '@lezer/common',
         '@lezer/lr',
         ...builtinModules
-      ]
+      ],
+      output: {
+        entryFileNames: 'main.js',
+        exports: 'named'
+      }
     },
-    target: 'node14',
+    target: 'esnext',
     sourcemap: false,
     emptyOutDir: true
   },

@@ -1,26 +1,36 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "inlineSourceMap": true,
-    "inlineSources": true,
     "module": "ESNext",
     "target": "es6",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "allowJs": true,
-    "noImplicitAny": true,
-    "esModuleInterop": true,
     "moduleResolution": "bundler",
-    "importHelpers": true,
-    "skipLibCheck": true,
     "lib": [
       "dom",
-      "es5",
-      "scripthost",
       "es2019"
-    ]
+    ],
+    "types": [
+      "node"
+    ],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "allowJs": true,
+    "importHelpers": true
   },
   "include": [
-    "**/*.ts"
+    "*.ts",
+    "src/**/*.ts",
+    "scripts/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "archive"
   ]
 }
