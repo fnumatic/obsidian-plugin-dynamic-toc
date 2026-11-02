@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.44](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.43...0.0.44) (2026-11-02)
+
+
+### Bug Fixes
+
+* **heading:** resolve anchors for markdown and aliased link headings ([357e5e5](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/commit/357e5e57c0660cb1722fae0cea5d6e08f4563e0d)), closes [#1](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/issues/1)
+
 ## [0.0.43](https://github.com/fnumatic/obsidian-plugin-dynamic-toc/compare/0.0.42...0.0.43) (2025-10-15)
 
 
